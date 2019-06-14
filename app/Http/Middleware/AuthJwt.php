@@ -33,6 +33,17 @@ class AuthJwt
             return response()->json(['error' => 'Token expired'], 401);
         }
 
+        if (!isset($decoded->id)) {
+            return response()->json(['error' => 'Missing parameter id in JWT.'], 500);
+        }
+        $request->setUserResolver(function () use ($decoded, $jwtToken) {
+
+            return [
+                'id' => $decoded,
+                'jwt' => $jwtToken
+            ];
+        });
+
         return $next($request);
     }
 }

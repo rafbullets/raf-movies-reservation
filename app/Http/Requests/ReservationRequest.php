@@ -24,7 +24,6 @@ class ReservationRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => ['required', 'integer'],
             'seats.*.row_number' => ['required', 'integer'],
             'seats.*.seat_number' => ['required', 'integer'],
             'projection_id' => ['required', 'integer'],

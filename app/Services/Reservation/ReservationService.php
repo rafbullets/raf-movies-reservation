@@ -71,6 +71,9 @@ class ReservationService implements ReservationServiceInterface
         $allSeats = $this->getSeatsMatrix($projectionId);
 
         foreach ($seats as $seat) {
+            if(!isset($allSeats[$seat['row_number']]) || !isset($allSeats[$seat['row_number']][$seat['seat_number']])) {
+                return false;
+            }
             if ($allSeats[$seat['row_number']][$seat['seat_number']]==1) {
                 return false;
             }
@@ -96,7 +99,7 @@ class ReservationService implements ReservationServiceInterface
 
         // Create reservation
         $reservation = $this->reservationRepository
-            ->createReservationWithSeats($data['user_id'], $data['projection_id'], $price, $currency, $requestedSeats);
+            ->createReservationWithSeats(request()->user()['id'], $data['projection_id'], $price, $currency, $requestedSeats);
 
         // Request to paypal payment
         $requestedPayment = Paypal::requestPayment($price, $projection['currency'], $data['return_url'], $data['cancel_url']);

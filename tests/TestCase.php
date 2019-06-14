@@ -12,16 +12,15 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 abstract class TestCase extends BaseTestCase
 {
     use DatabaseMigrations;
-    use RefreshDatabase;
+
     use CreatesApplication;
 
     protected function generateJwt()
     {
         $key = "my_secret_key";
         $token = array(
-            "username" => "http://example.org",
             "exp" => Carbon::now()->addHour()->timestamp,
-            "user_id" => 1
+            "id" => 1
         );
 
         return JWT::encode($token, $key);

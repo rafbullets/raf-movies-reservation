@@ -21,15 +21,16 @@ class ProjectionLibrary
 
     public function getProjection($projectionId)
     {
-        //TODO:
+        $response = $this->request('get', 'api/projections/'.$projectionId);
+
         return [
-            'id' => $projectionId,
-            'price' => 5,
+            'id' => $response['id'],
+            'price' => $response['ticket_price'],
             'currency' => 'USD',
             'hall' => [
-                'id' => 1,
-                'rowCount' => 50,
-                'seatsCount' => 50
+                'id' => $response['cinema_hall']['id'],
+                'rowCount' => $response['cinema_hall']['number_of_rows'],
+                'seatsCount' => $response['cinema_hall']['seats_in_row']
             ]
         ];
     }
@@ -39,10 +40,18 @@ class ProjectionLibrary
         $url = $this->url;
 
         $options = [
-            'headers' => ['content-type' => 'application/json', 'Accept' => 'application/json'],
+            'headers' => [
+                'content-type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer '.request()->user()['jwt']
+            ],
         ];
 
         $response = $this->client->$method($url.$uri, $options);
+
+        $response = $response->getBody();
+
+        $response = json_decode($response, true);
 
         return $response;
     }
