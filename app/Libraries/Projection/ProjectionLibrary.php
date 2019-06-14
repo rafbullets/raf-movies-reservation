@@ -25,6 +25,7 @@ class ProjectionLibrary
 
         return [
             'id' => $response['id'],
+            'start_at' => $response['start_at'],
             'price' => $response['ticket_price'],
             'currency' => 'USD',
             'hall' => [

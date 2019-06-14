@@ -15,6 +15,7 @@ use App\Repositories\Reservation\ReservationRepositoryInterface;
 use App\Repositories\Seat\SeatRepositoryInterface;
 use App\Reservation;
 use App\Seat;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 class ReservationService implements ReservationServiceInterface
@@ -89,6 +90,9 @@ class ReservationService implements ReservationServiceInterface
         $requestedSeats = $data['seats'];
 
         if(! $this->checkSeats($projection['id'], $requestedSeats)) {
+            return null;
+        }
+        if (Carbon::now()->greaterThan($projection['start_at'])) {
             return null;
         }
 
