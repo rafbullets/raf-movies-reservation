@@ -15,12 +15,12 @@ abstract class TestCase extends BaseTestCase
 
     use CreatesApplication;
 
-    protected function generateJwt()
+    protected function generateJwt($userId = 1)
     {
         $key = "my_secret_key";
         $token = array(
             "exp" => Carbon::now()->addHour()->timestamp,
-            "id" => 1
+            "id" => $userId
         );
 
         return JWT::encode($token, $key);

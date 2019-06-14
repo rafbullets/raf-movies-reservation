@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Facades\Paypal;
 use App\Facades\Projection;
+use App\Facades\User;
 use App\Mail\TicketReserved;
 use App\PaypalPayment;
 use App\Reservation;
@@ -39,8 +40,21 @@ class ReservationTest extends TestCase
             'payment_state' => 'created'
         ]);
 
+        User::fake($this->mockClient([
+            new Response(200, [], json_encode([
+                "user" => [
+                    "id" => $reservation->user_id,
+                    "email" => "jela@jelica.com",
+                ],
+                "status" => [
+                    "discount" => 0.05,
+                ]
+            ])),
+            new Response(200, [], json_encode([]))
+        ]));
+
         $response = $this->get("/api/reserve?payment_id={$payPalPayment->payment_id}&payer_id={$payerId}", [
-            'Authorization' => 'Bearer '.$this->generateJwt()
+            'Authorization' => 'Bearer '.$this->generateJwt($reservation->user_id)
         ]);
 
         $responseJson = $response->json();
@@ -69,6 +83,7 @@ class ReservationTest extends TestCase
 
     public function testReservationRequest()
     {
+        $user_id = random_int(1, 100);
         $projectionId = random_int(1, 50);
         $ticketPrice = random_int(1, 100);
 
@@ -109,14 +124,14 @@ class ReservationTest extends TestCase
 	        "return_url" => "http://example1.com",
             "cancel_url" => "http://example2.com"
         ], [
-            'Authorization' => 'Bearer '.$this->generateJwt()
+            'Authorization' => 'Bearer '.$this->generateJwt($user_id)
         ]);
 
         $response->assertStatus(200);
         $this->assertTrue(isset($response->json()['redirect_to']));
 
         $this->assertDatabaseHas('reservations', [
-            'user_id' => 1,
+            'user_id' => $user_id,
             'projection_id' => $projectionId,
             'price' => 2*$ticketPrice,
             'currency' => 'USD'

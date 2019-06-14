@@ -39,7 +39,7 @@ class AuthJwt
         $request->setUserResolver(function () use ($decoded, $jwtToken) {
 
             return [
-                'id' => $decoded,
+                'id' => $decoded->id,
                 'jwt' => $jwtToken
             ];
         });

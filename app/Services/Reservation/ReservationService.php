@@ -95,7 +95,8 @@ class ReservationService implements ReservationServiceInterface
         // Calculate price
         $price = $projection['price'] * count($requestedSeats);
         $currency = $projection['currency'];
-        // TODO: Get sales from User service and calculate new price
+        $user = User::getUser(request()->user()['id']);
+        $price = $price * (1 - $user['status']['discount']);
 
         // Create reservation
         $reservation = $this->reservationRepository
@@ -113,8 +114,8 @@ class ReservationService implements ReservationServiceInterface
 
     public function verifyReservation($data)
     {
-//        dd($data['payment_id']);
-//        dd(PaypalPayment::all()->toArray());
+        $user = User::getUser(request()->user()['id']);
+
         /** @var PaypalPayment $paypalPayment */
         $paypalPayment = $this->paypalPaymentRepository->firstBy('payment_id', $data['payment_id']);
 
@@ -136,9 +137,9 @@ class ReservationService implements ReservationServiceInterface
             $this->reservationRepository
                 ->updateWhere(['id' => $paypalPayment->reservation->id], ['status' => Reservation::VERIFIED_STATUS]);
 
-            // TODO: increase points to user
-            // TODO: Get email address from user service
-            Mail::to('stefanantic7@gmail.com')->send(new TicketReserved($paypalPayment->reservation));
+            User::increasePoints(request()->user()['id']);
+
+            Mail::to($user['user']['email'])->send(new TicketReserved($paypalPayment->reservation));
         }
 
 

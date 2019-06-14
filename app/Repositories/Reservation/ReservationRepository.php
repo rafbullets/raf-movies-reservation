@@ -21,7 +21,7 @@ class ReservationRepository extends Repository implements ReservationRepositoryI
     {
         /** @var Reservation $reservation */
         $reservation = Reservation::query()->create([
-            'user_id' => 1,
+            'user_id' => $userId,
             'projection_id' => $projectionId,
             'price' => $price,
             'currency' => $currency

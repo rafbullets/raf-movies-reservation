@@ -19,13 +19,13 @@ class UserLibrary
 
     public function getUser($userId)
     {
-
-
+        $response = $this->request('get', 'api/users/'.$userId);
+        return $response;
     }
 
     public function increasePoints($userId)
     {
-
+        $this->request('post', 'api/users/inc/'.$userId);
     }
 
 
@@ -34,10 +34,18 @@ class UserLibrary
         $url = $this->url;
 
         $options = [
-            'headers' => ['content-type' => 'application/json', 'Accept' => 'application/json'],
+            'headers' => [
+                'content-type' => 'application/json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer '.request()->user()['jwt']
+            ],
         ];
 
         $response = $this->client->$method($url.$uri, $options);
+
+        $response = $response->getBody();
+
+        $response = json_decode($response, true);
 
         return $response;
     }
