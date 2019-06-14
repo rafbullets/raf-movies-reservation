@@ -19,10 +19,10 @@ class CreateReservationsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('projection_id');
             $table->float('price');
+            $table->string('currency');
             $table->tinyInteger('status')->default(Reservation::PENDING_STATUS);
             $table->timestamps();
 
-            $table->foreign('reservation_id')->references('id')->on('reservations');
         });
     }
 

@@ -10,7 +10,7 @@ class PaypalPayment extends Model
      * @var array
      */
     protected $fillable = [
-        'payment_id', 'payer_id', 'payment_status'
+        'payment_id', 'payer_id', 'payment_state', 'price', 'currency', 'approval_link'
     ];
 
     /**
@@ -18,7 +18,7 @@ class PaypalPayment extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function reservations()
+    public function reservation()
     {
         return $this->belongsTo(Reservation::class);
     }

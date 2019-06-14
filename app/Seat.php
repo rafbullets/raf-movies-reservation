@@ -18,7 +18,7 @@ class Seat extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function reservations()
+    public function reservation()
     {
         return $this->belongsTo(Reservation::class);
     }

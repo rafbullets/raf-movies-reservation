@@ -14,7 +14,7 @@ class Reservation extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'projection_id', 'price', 'status'
+        'user_id', 'projection_id', 'price', 'status', 'currency'
     ];
 
     /**

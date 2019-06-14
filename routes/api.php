@@ -16,3 +16,8 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/seats/{projectionId}', 'ReservationController@getSeats');
+Route::post('/reserve', 'ReservationController@reserve');
+Route::get('/reserve', 'ReservationController@verify');
+
