@@ -46,6 +46,11 @@ class ReservationController extends Controller
                 'message' => 'Try another seat'
             ], 400);
         }
+        if($reservation == false) {
+            return response()->json([
+                'message' => 'Movie has already started'
+            ], 400);
+        }
         return response()->json(['redirect_to' => $reservation->paypalPayment->approval_link]);
     }
 

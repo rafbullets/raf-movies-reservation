@@ -93,7 +93,7 @@ class ReservationService implements ReservationServiceInterface
             return null;
         }
         if (Carbon::now()->greaterThan($projection['start_at'])) {
-            return null;
+            return false;
         }
 
         // Calculate price
